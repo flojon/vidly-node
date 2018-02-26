@@ -5,6 +5,12 @@ const express = require('express');
 const router = express.Router();
 const service = require('../services/user');
 
+router.get('/me', auth, async (req, res) => {
+    let user = await service.get(req.user._id);
+    user = _.pick(user, ['name', 'email']);
+    res.send(user);
+});
+
 router.get('/', async (req, res) => {
     let users = await service.getAll();
     res.send(users);
