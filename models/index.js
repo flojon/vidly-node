@@ -27,7 +27,14 @@ const Rental = mongoose.model('Rental', new mongoose.Schema({
     fee: { type: Number, min: 0 }
 }));
 
+const User = mongoose.model('User', new mongoose.Schema({
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true }
+}));
+
 exports.Customer = Customer;
 exports.Genre = Genre;
 exports.Movie = Movie;
 exports.Rental = Rental;
+exports.User = User;
