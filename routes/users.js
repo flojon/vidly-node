@@ -1,5 +1,8 @@
 
+const config = require('config');
 const express = require('express');
+const jwt = require('jsonwebtoken');
+
 const router = express.Router();
 const service = require('../services/user');
 
@@ -11,6 +14,12 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         let user = await service.create(req.body);
+
+        // Send auth token as header
+        let jwtPrivateKey = config.get('jwtPrivateKey');
+        let token = jwt.sign({ _id: user._id }, jwtPrivateKey);
+        res.header('X-Auth-Token', token);
+
         res.send(user);
     }
     catch (error) {
