@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const {User} = require('../models');
+const _ = require('lodash');
 
 async function validate(data) {
     const schema = {
@@ -19,7 +20,9 @@ class UserService {
     async create(data) {
         await validate(data);
         let user = new User(data);
-        return user.save();
+        await user.save();
+
+        return _.pick(user, ['name', 'email']);
     }
 
     async get(id) {
