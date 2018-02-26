@@ -1,7 +1,6 @@
 
-const config = require('config');
+const _ = require('lodash');
 const express = require('express');
-const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 const service = require('../services/user');
@@ -16,11 +15,9 @@ router.post('/', async (req, res) => {
         let user = await service.create(req.body);
 
         // Send auth token as header
-        let jwtPrivateKey = config.get('jwtPrivateKey');
-        let token = jwt.sign({ _id: user._id }, jwtPrivateKey);
-        res.header('X-Auth-Token', token);
-
-        res.send(user);
+        res
+            .header('X-Auth-Token', user.generateAuthToken())
+            .send(_.pick(user, ['name', 'email']));
     }
     catch (error) {
         if (error.details && error.details[0])

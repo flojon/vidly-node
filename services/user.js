@@ -1,6 +1,5 @@
 const Joi = require('joi');
 const {User} = require('../models');
-const _ = require('lodash');
 const bcrypt = require('bcrypt');
 
 async function validate(data) {
@@ -24,9 +23,7 @@ class UserService {
         let salt = await bcrypt.genSalt();
         user.password = await bcrypt.hash('qwerty', salt);
     
-        await user.save();
-
-        return _.pick(user, ['name', 'email']);
+        return await user.save();
     }
 
     async get(id) {

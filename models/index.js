@@ -1,3 +1,5 @@
+const config = require('config');
+const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
 const Customer = mongoose.model('Customer', new mongoose.Schema({
@@ -27,11 +29,18 @@ const Rental = mongoose.model('Rental', new mongoose.Schema({
     fee: { type: Number, min: 0 }
 }));
 
-const User = mongoose.model('User', new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true }
-}));
+});
+
+userSchema.methods.generateAuthToken = function() {
+    let jwtPrivateKey = config.get('jwtPrivateKey');
+    return jwt.sign({ _id: this._id }, jwtPrivateKey);
+};
+
+const User = mongoose.model('User', userSchema);
 
 exports.Customer = Customer;
 exports.Genre = Genre;
