@@ -1,7 +1,7 @@
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 
-const {Rental} = require('../models');
+const {Rental, Customer, Movie } = require('../models');
 
 async function validate(data) {
     const schema = {
@@ -22,6 +22,15 @@ class RentalService {
 
     async create(data) {
         await validate(data);
+
+        let customer = await Customer.findById(data.customer);
+        if (!customer)
+            throw "Invalid customer id";
+
+        let movie = await Movie.findById(data.movie);
+        if (!movie)
+            throw "Invalid movie id";
+
         let rental = new Rental(data);
         rental = await rental.save();
         return rental
