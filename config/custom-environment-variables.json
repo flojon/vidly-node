@@ -1,3 +1,4 @@
 {
-    "port": "PORT"
+    "port": "PORT",
+    "jwtPrivateKey": "JWT_PRIVATE_KEY"
 }

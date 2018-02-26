@@ -6,6 +6,11 @@ const morgan = require('morgan');
 
 const routes = require('./routes');
 
+if (!config.get('jwtPrivateKey')) {
+    console.error("ERROR: Missing JWT_PRIVATE_KEY!");
+    process.exit(1);
+}
+
 const app = express();
 
 app.use(express.json());

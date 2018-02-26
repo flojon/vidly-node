@@ -1,4 +1,4 @@
-
+const config = require('config');
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
@@ -28,7 +28,8 @@ router.post('/', async (req, res) => {
     if (!validPassword)
         return res.status(400).send('Invalid email or password');
 
-    let token = jwt.sign({ _id: user._id }, 'qwerty'); // TODO extract private key
+    let jwtPrivateKey = config.get('jwtPrivateKey');
+    let token = jwt.sign({ _id: user._id }, jwtPrivateKey);
     
     res.send(token);
 });
