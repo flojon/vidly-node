@@ -1,11 +1,5 @@
 const Joi = require('joi');
-const mongoose = require('mongoose');
-
-const Customer = mongoose.model('Customer', new mongoose.Schema({
-    name: { type: String, required: true },
-    phone: { type: String, required: true },
-    isGold:  { type: Boolean, default: false }
-}));
+const {Customer} = require('../models');
 
 async function validate(customer) {
     const schema = {
