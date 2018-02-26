@@ -19,6 +19,15 @@ const Movie = mongoose.model('Movie', new mongoose.Schema({
     dailyRentalRate: { type: Number, default: 0, min: 0, max: 255 }
 }));
 
+const Rental = mongoose.model('Rental', new mongoose.Schema({
+    movie: { type: mongoose.Schema.Types.ObjectId, ref: 'Movie', required: true },
+    customer: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer', required: true },
+    dateRented: { type: Date, required: true, default: Date.now },
+    dateReturned: { type: Date },
+    fee: { type: Number, min: 0 }
+}));
+
 exports.Customer = Customer;
 exports.Genre = Genre;
 exports.Movie = Movie;
+exports.Rental = Rental;
