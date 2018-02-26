@@ -1,4 +1,4 @@
-
+const auth = require('../middleware/auth');
 const express = require('express');
 const router = express.Router();
 const service = require('../services/genre');
@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
     res.send(genres);
 });
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     try {
         let genre = await service.create(req.body);
         res.send(genre);
@@ -31,7 +31,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
     try {
         let genre = await service.update(req.params.id, req.body);
         if (genre) {
@@ -44,7 +44,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
     try {
         let genre = await service.delete(req.params.id);
         if (genre) {

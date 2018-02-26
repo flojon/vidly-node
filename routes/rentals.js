@@ -1,4 +1,4 @@
-
+const auth = require('../middleware/auth');
 const express = require('express');
 const router = express.Router();
 const service = require('../services/rental');
@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
     res.send(rentals);
 });
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     try {
         let rental = await service.create(req.body);
         res.send(rental);
@@ -34,7 +34,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
     try {
         let rental = await service.update(req.params.id, req.body);
         if (rental) {
@@ -50,7 +50,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
     try {
         let rental = await service.delete(req.params.id);
         if (rental) {

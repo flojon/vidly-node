@@ -1,4 +1,4 @@
-
+const auth = require('../middleware/auth');
 const _ = require('lodash');
 const express = require('express');
 
@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
     res.send(users);
 });
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     try {
         let user = await service.create(req.body);
 
@@ -40,7 +40,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
     try {
         let user = await service.update(req.params.id, req.body);
         if (user) {
@@ -56,7 +56,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
     try {
         let user = await service.delete(req.params.id);
         if (user) {

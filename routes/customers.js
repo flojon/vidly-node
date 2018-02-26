@@ -1,4 +1,4 @@
-
+const auth = require('../middleware/auth');
 const express = require('express');
 const service = require('../services/customer');
 
@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
     res.send(customers);
 });
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     try {
         let customer = await service.create(req.body);
         res.send(customer);
@@ -31,7 +31,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
     try {
         let customer = await service.update(req.params.id, req.body);
         if (customer) {
@@ -44,7 +44,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
     let customer = await service.delete(req.params.id);
     if (customer) {
         res.send(customer);

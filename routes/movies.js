@@ -1,4 +1,4 @@
-
+const auth = require('../middleware/auth');
 const express = require('express');
 const service = require('../services/movie');
 
@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
     res.send(movies);
 });
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     try {
         let movie = await service.create(req.body);
         res.send(movie);
@@ -34,7 +34,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
     try {
         let movie = await service.update(req.params.id, req.body);
         if (movie) {
@@ -50,7 +50,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
     let movie = await service.delete(req.params.id);
     if (movie) {
         res.send(movie);
