@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const {User} = require('../models');
 
 function validate(genre) {
@@ -27,7 +28,9 @@ router.post('/', async (req, res) => {
     if (!validPassword)
         return res.status(400).send('Invalid email or password');
 
-    res.send(true);
+    let token = jwt.sign({ _id: user._id }, 'qwerty'); // TODO extract private key
+    
+    res.send(token);
 });
 
 module.exports = router;
