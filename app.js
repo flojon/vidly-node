@@ -4,9 +4,7 @@ const helmet = require('helmet');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 
-// Routes
-const customers = require('./routes/customers');
-const genres = require('./routes/genres');
+const routes = require('./routes');
 
 const app = express();
 
@@ -14,8 +12,7 @@ app.use(express.json());
 app.use(helmet());
 app.use(morgan('tiny'));
 
-app.use('/api/customers', customers);
-app.use('/api/genres', genres);
+app.use('/', routes);
 
 async function run() {
     const port = config.get("port");
