@@ -1,10 +1,12 @@
 const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi);
+
 const {Rental} = require('../models');
 
 async function validate(data) {
     const schema = {
-        movie: Joi.string().length(24).required(),
-        customer: Joi.string().length(24).required(),
+        movie: Joi.objectId().required(),
+        customer: Joi.objectId().required(),
     };
 
     return Joi.validate(data, schema);
