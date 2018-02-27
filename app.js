@@ -1,4 +1,5 @@
 require('express-async-errors');
+const winston = require('winston');
 const config = require('config');
 const express = require('express');
 const helmet = require('helmet');
@@ -6,6 +7,7 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const error = require('./middleware/error')
 
+winston.add(winston.transports.File, { filename: 'error.log'});
 
 const routes = require('./routes');
 
