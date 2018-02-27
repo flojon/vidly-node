@@ -3,6 +3,8 @@ const express = require('express');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
+const error = require('./middleware/error')
+
 
 const routes = require('./routes');
 
@@ -18,6 +20,8 @@ app.use(helmet());
 app.use(morgan('tiny'));
 
 app.use('/', routes);
+
+app.use(error);
 
 async function run() {
     const port = config.get("port");
