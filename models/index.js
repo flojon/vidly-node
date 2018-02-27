@@ -32,12 +32,13 @@ const Rental = mongoose.model('Rental', new mongoose.Schema({
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true }
+    password: { type: String, required: true },
+    isAdmin: Boolean
 });
 
 userSchema.methods.generateAuthToken = function() {
     let jwtPrivateKey = config.get('jwtPrivateKey');
-    return jwt.sign({ _id: this._id }, jwtPrivateKey);
+    return jwt.sign({ _id: this._id, isAdmin: this.isAdmin }, jwtPrivateKey);
 };
 
 const User = mongoose.model('User', userSchema);

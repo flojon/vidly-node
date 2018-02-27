@@ -44,7 +44,7 @@ router.put('/:id', auth, async (req, res) => {
     }
 });
 
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', [auth, admin], async (req, res) => {
     try {
         let genre = await service.delete(req.params.id);
         if (genre) {
