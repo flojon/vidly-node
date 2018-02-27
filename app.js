@@ -1,3 +1,4 @@
+require('express-async-errors');
 const config = require('config');
 const express = require('express');
 const helmet = require('helmet');

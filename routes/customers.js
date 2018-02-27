@@ -10,37 +10,25 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', auth, async (req, res) => {
-    try {
-        let customer = await service.create(req.body);
-        res.send(customer);
-    } catch (error) {
-        res.status(400).send(error.details[0].message);
-    }
+    let customer = await service.create(req.body);
+    res.send(customer);
 });
 
 router.get('/:id', async (req, res) => {
-    try {
-        let customer = await service.get(req.params.id);
-        if (customer) {
-            res.send(customer);
-        } else {
-            res.status(404).send('No customer found with the given id');
-        }
-    } catch (error) {
-        res.status(400).send(error);
+    let customer = await service.get(req.params.id);
+    if (customer) {
+        res.send(customer);
+    } else {
+        res.status(404).send('No customer found with the given id');
     }
 });
 
 router.put('/:id', auth, async (req, res) => {
-    try {
-        let customer = await service.update(req.params.id, req.body);
-        if (customer) {
-            res.send(customer);
-        } else {
-            res.status(404).send('No customer found with the given id');
-        }
-    } catch (error) {
-        res.status(400).send(error.details[0].message);
+    let customer = await service.update(req.params.id, req.body);
+    if (customer) {
+        res.send(customer);
+    } else {
+        res.status(404).send('No customer found with the given id');
     }
 });
 

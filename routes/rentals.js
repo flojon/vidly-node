@@ -9,57 +9,34 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', auth, async (req, res) => {
-    try {
-        let rental = await service.create(req.body);
-        res.send(rental);
-    }
-    catch (error) {
-        if (error.details && error.details[0])
-            res.status(400).send(error.details[0].message);
-        else
-            res.status(400).send(error);
-    }
+    let rental = await service.create(req.body);
+    res.send(rental);
 });
 
 router.get('/:id', async (req, res) => {
-    try {
-        let rental = await service.get(req.params.id);
-        if (rental) {
-            res.send(rental);    
-        } else {
-            res.status(404).send('No rental found with the given id');
-        }
-    } catch (error) {
-        res.send(error);
+    let rental = await service.get(req.params.id);
+    if (rental) {
+        res.send(rental);    
+    } else {
+        res.status(404).send('No rental found with the given id');
     }
 });
 
 router.put('/:id', auth, async (req, res) => {
-    try {
-        let rental = await service.update(req.params.id, req.body);
-        if (rental) {
-            res.send(rental);
-        } else {
-            res.status(404).send('No rental found with the given id');
-        }
-    } catch (error) {
-        if (error.details && error.details[0])
-            res.status(400).send(error.details[0].message);
-        else
-            res.status(400).send(error);
+    let rental = await service.update(req.params.id, req.body);
+    if (rental) {
+        res.send(rental);
+    } else {
+        res.status(404).send('No rental found with the given id');
     }
 });
 
 router.delete('/:id', auth, async (req, res) => {
-    try {
-        let rental = await service.delete(req.params.id);
-        if (rental) {
-            res.send(rental);
-        } else {
-            res.status(404).send('No rental found with the given id');
-        }
-    } catch (error) {
-        res.status(400).send(error);
+    let rental = await service.delete(req.params.id);
+    if (rental) {
+        res.send(rental);
+    } else {
+        res.status(404).send('No rental found with the given id');
     }
 });
 
