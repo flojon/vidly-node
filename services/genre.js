@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const {Genre} = require('../models');
 
-async function validate(genre) {
+function validate(genre) {
     const schema = {
         name: Joi.string().min(3).required()
     };
@@ -15,9 +15,12 @@ class GenreService {
     }
 
     async create(data) {
-        await validate(data);
+        const {error} = validate(data);
+        if (error)
+            return { error: error.details[0].message };
+    
         let genre = new Genre(data);
-        return genre.save();
+        return { genre: await genre.save() };
     }
 
     async get(id) {
@@ -25,8 +28,11 @@ class GenreService {
     }
 
     async update(id, data) {
-        await validate(data);
-        return Genre.findByIdAndUpdate(id, data, {new: true})
+        const {error} = validate(data);
+        if (error)
+            return { error: error.details[0].message };
+        
+        return { genre: await Genre.findByIdAndUpdate(id, data, {new: true}) };
     }
 
     async delete(id) {

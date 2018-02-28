@@ -9,8 +9,12 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', auth, async (req, res) => {
-    let rental = await service.create(req.body);
-    res.send(rental);
+    const {error, rental} = await service.create(req.body);
+    if (error) {
+        res.status(400).send(error);
+    } else {
+        res.send(rental);
+    }
 });
 
 router.get('/:id', async (req, res) => {
@@ -23,8 +27,10 @@ router.get('/:id', async (req, res) => {
 });
 
 router.put('/:id', auth, async (req, res) => {
-    let rental = await service.update(req.params.id, req.body);
-    if (rental) {
+    const {error, rental} = await service.update(req.params.id, req.body);
+    if (error) {
+        res.status(400).send(error);
+    } else if (rental) {
         res.send(rental);
     } else {
         res.status(404).send('No rental found with the given id');

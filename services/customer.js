@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const {Customer} = require('../models');
 
-async function validate(customer) {
+function validate(customer) {
     const schema = {
         name: Joi.string().min(3).required(),
         phone: Joi.string().min(3).required(),
@@ -17,9 +17,12 @@ class CustomerService {
     }
 
     async create(data) {
-        await validate(data);
+        const {error} = validate(data);
+        if (error)
+            return { error: error.details[0].message };
+
         let customer = new Customer(data);
-        return customer.save();
+        return { customer: await customer.save() };
     }
 
     async get(id) {
@@ -27,8 +30,11 @@ class CustomerService {
     }
 
     async update(id, data) {
-        await validate(data);
-        return Customer.findByIdAndUpdate(id, data, {new: true})
+        const {error} = validate(data);
+        if (error)
+            return { error: error.details[0].message };
+
+        return { customer: await Customer.findByIdAndUpdate(id, data, {new: true}) };
     }
 
     async delete(id) {

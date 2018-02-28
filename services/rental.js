@@ -3,10 +3,11 @@ Joi.objectId = require('joi-objectid')(Joi);
 
 const {Rental, Customer, Movie } = require('../models');
 
-async function validate(data) {
+function validate(data) {
     const schema = {
         movie: Joi.objectId().required(),
         customer: Joi.objectId().required(),
+        dateReturned: Joi.date()
     };
 
     return Joi.validate(data, schema);
@@ -21,21 +22,25 @@ class RentalService {
     }
 
     async create(data) {
-        await validate(data);
+        const {error} = validate(data);
+        if (error)
+            return { error: error.details[0].message };
 
         let customer = await Customer.findById(data.customer);
         if (!customer)
-            throw "Invalid customer id";
+            return { error: "Invalid customer id" };
 
         let movie = await Movie.findById(data.movie);
         if (!movie)
-            throw "Invalid movie id";
+            return { error: "Invalid movie id" };
 
         let rental = new Rental(data);
         rental = await rental.save();
-        return rental
+        rental = await rental
                 .populate('customer')
                 .populate('movie').execPopulate();
+        
+        return { rental: rental };
     }
 
     async get(id) {
@@ -45,10 +50,15 @@ class RentalService {
     }
 
     async update(id, data) {
-        await validate(data);
-        return Rental.findByIdAndUpdate(id, data, {new: true})
-                    .populate('customer')
-                    .populate('movie');
+        const {error} = validate(data);
+        if (error)
+            return { error: error.details[0].message };
+
+        const rental = await Rental.findByIdAndUpdate(id, data, {new: true})
+                                .populate('customer')
+                                .populate('movie');
+;
+        return { rental: rental };
     }
 
     async delete(id) {

@@ -10,8 +10,11 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', auth, async (req, res) => {
-    let genre = await service.create(req.body);
-    res.send(genre);
+    let {error, genre} = await service.create(req.body);
+    if (error)
+        res.status(400).send(error);
+    else
+        res.send(genre);
 });
 
 router.get('/:id', async (req, res) => {
@@ -24,8 +27,10 @@ router.get('/:id', async (req, res) => {
 });
 
 router.put('/:id', auth, async (req, res) => {
-    let genre = await service.update(req.params.id, req.body);
-    if (genre) {
+    let {error, genre} = await service.update(req.params.id, req.body);
+    if (error) {
+        res.status(400).send(error);
+    } else if (genre) {
         res.send(genre);
     } else {
         res.status(404).send('No genre found with the given id');

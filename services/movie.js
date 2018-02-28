@@ -1,13 +1,10 @@
 const Joi = require('joi');
 const {Movie, Genre} = require('../models');
 
-async function validate(movie) {
+function validate(movie) {
     const schema = {
         title: Joi.string().min(3).required(),
-        genre: {
-            _id: Joi.string().length(24).required(),
-            name: Joi.string()
-        },
+        genre: Joi.objectId().required(),
         numberInStock: Joi.number(),
         dailyRentalRate: Joi.number()
     };
@@ -21,9 +18,11 @@ class MovieService {
     }
 
     async create(data) {
-        await validate(data);
+        const {error} = validate(data);
+        if (error)
+            return { error: error.details[0].message };
 
-        let genre = await Genre.findById(data.genre._id);
+        let genre = await Genre.findById(data.genre);
         if (!genre)
             throw "Invalid genre";
 
@@ -32,7 +31,8 @@ class MovieService {
             _id: genre._id,
             name: genre.name
         };
-        return movie.save();
+
+        return { movie: await movie.save() };
     }
 
     async get(id) {
@@ -40,9 +40,11 @@ class MovieService {
     }
 
     async update(id, data) {
-        await validate(data);
+        const {error} = validate(data);
+        if (error)
+            return { error: error.details[0].message };
 
-        let genre = await Genre.findById(data.genre._id);
+        let genre = await Genre.findById(data.genre);
         if (!genre)
             throw "Invalid genre";
 
@@ -51,7 +53,7 @@ class MovieService {
             name: genre.name
         }
 
-        return Movie.findByIdAndUpdate(id, data, {new: true})
+        return { movie: await Movie.findByIdAndUpdate(id, data, {new: true}) };
     }
 
     async delete(id) {

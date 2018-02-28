@@ -10,8 +10,12 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', auth, async (req, res) => {
-    let movie = await service.create(req.body);
-    res.send(movie);
+    const {error, movie} = await service.create(req.body);
+    if (error) {
+        res.status(400).send(error);
+    } else {
+        res.send(movie);
+    }
 });
 
 router.get('/:id', async (req, res) => {
@@ -24,8 +28,10 @@ router.get('/:id', async (req, res) => {
 });
 
 router.put('/:id', auth, async (req, res) => {
-    let movie = await service.update(req.params.id, req.body);
-    if (movie) {
+    const {error, movie} = await service.update(req.params.id, req.body);
+    if (error) {
+        res.status(400).send(error);
+    } else if (movie) {
         res.send(movie);
     } else {
         res.status(404).send('No movie found with the given id');

@@ -17,11 +17,14 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', auth, async (req, res) => {
-    let user = await service.create(req.body);
-
-    // Send auth token as header
-    res.header('X-Auth-Token', user.generateAuthToken())
-        .send(_.pick(user, ['name', 'email']));
+    const {error, user} = await service.create(req.body);
+    if (error) {
+        res.status(400).send(error);
+    } else { 
+        // Send auth token as header
+        res.header('X-Auth-Token', user.generateAuthToken())
+            .send(_.pick(user, ['name', 'email']));
+    }
 });
 
 router.get('/:id', async (req, res) => {
@@ -34,9 +37,11 @@ router.get('/:id', async (req, res) => {
 });
 
 router.put('/:id', auth, async (req, res) => {
-    let user = await service.update(req.params.id, req.body);
-    if (user) {
-        res.send(user);
+    const {error, user} = await service.update(req.params.id, req.body);
+    if (error) {
+        res.status(400).send(error);
+    } else if (user) {
+        res.send(_.pick(user, ['name', 'email']));
     } else {
         res.status(404).send('No user found with the given id');
     }
