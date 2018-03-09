@@ -24,7 +24,7 @@ class UserService {
 
         let user = new User(data);
         let salt = await bcrypt.genSalt();
-        user.password = await bcrypt.hash('qwerty', salt);
+        user.password = await bcrypt.hash(user.password, salt);
     
         return { user: await user.save() };
     }
