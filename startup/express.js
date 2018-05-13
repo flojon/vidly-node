@@ -15,4 +15,6 @@ app.use('/', routes);
 app.use(error);
 
 const port = config.get("port");
-app.listen(port, () => winston.info(`Listening on port ${port}`));
+const server = app.listen(port, () => winston.info(`Listening on port ${port}`));
+
+module.exports = server;
