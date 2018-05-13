@@ -20,7 +20,7 @@ Set ```jwtPrivateKey``` to a secret string used for encrypting the JWT-token.
 Set ```db.url``` to your MongoDB connection string. For example:
 
 ```
-mongodb://localhost:27017/vidley
+mongodb://localhost:27017/vidly
 ```
 
 ## Running
