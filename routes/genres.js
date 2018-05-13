@@ -3,6 +3,7 @@ const admin = require('../middleware/admin');
 const express = require('express');
 const router = express.Router();
 const service = require('../services/genre');
+const validateObjectId = require('../middleware/objectid');
 
 router.get('/', async (req, res) => {
     let genres = await service.getAll();
@@ -17,7 +18,7 @@ router.post('/', auth, async (req, res) => {
         res.send(genre);
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', validateObjectId, async (req, res) => {
     let genre = await service.get(req.params.id);
     if (genre) {
         res.send(genre);    
